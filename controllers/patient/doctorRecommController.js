@@ -4,7 +4,7 @@ const httpStatusText = require('../../utils/httpStatusText')
 const asyncHandler = require('express-async-handler')
 
 
-const show_all_doctors = asyncHandler( async (req,res)=>{
+const showAllDoctors = asyncHandler( async (req,res)=>{
     
           const query = req.query;
           const limit = query.limit ||20 ;
@@ -19,7 +19,7 @@ const show_all_doctors = asyncHandler( async (req,res)=>{
            return res.status(200).json({ status : httpStatusText.SUCCESS , data : doctors  })
    
 });
-const show_doctors_by_specialty =  asyncHandler(async (req,res)=>{
+const showDoctorsBySpecialty =  asyncHandler(async (req,res)=>{
     
           const query = req.query;
           const limit = query.limit ||20 ;
@@ -40,7 +40,7 @@ const show_doctors_by_specialty =  asyncHandler(async (req,res)=>{
 
     
 });
-const show_doctors_by_city = asyncHandler (async (req,res)=>{
+const showDoctorsByCity = asyncHandler (async (req,res)=>{
     
           const query = req.query;
           const limit = query.limit ||20 ;
@@ -56,7 +56,7 @@ const show_doctors_by_city = asyncHandler (async (req,res)=>{
             return res.status(200).json({ status : httpStatusText.SUCCESS , data : doctors  })
     
 });
-const show_doctors_by_city_and_specialty = asyncHandler (async (req,res)=>{
+const showDoctorsByCityAndSpecialty = asyncHandler (async (req,res)=>{
     
             const { specialization, clinic_location ,Limit = 20, Page = 1  } = req.query;
             const query = {};
@@ -84,12 +84,20 @@ const show_doctors_by_city_and_specialty = asyncHandler (async (req,res)=>{
 
     
 });
+const specificDoctorById = asyncHandler(async (req,res)=>{
+    
+  const { doctorId } = req.params;
+  const doctor = await Doctor.findById(doctorId);
+  res.status(200).json({ status : httpStatusText.SUCCESS , data : doctor});
+
+});
 
 
 module.exports = {
-    show_all_doctors ,
-    show_doctors_by_specialty ,
-    show_doctors_by_city ,
-    show_doctors_by_city_and_specialty
+  showAllDoctors ,
+    showDoctorsBySpecialty ,
+    showDoctorsByCity ,
+    showDoctorsByCityAndSpecialty ,
+    specificDoctorById
 
 }

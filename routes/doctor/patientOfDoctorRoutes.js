@@ -1,18 +1,31 @@
-const express= require('express');
-const {getAllPatientsOfDoctor , createPatientOfDoctor ,getPatientOfDoctor , updatePatientOfDoctor , deletePatientOfDoctor} = require('../../controllers/doctor/patientsOfDoctorController')
+const express = require("express");
+const {
+  getAllPatientsOfDoctor,
+  createPatientOfDoctor,
+  getPatientOfDoctor,
+  updatePatientOfDoctor,
+  deletePatientOfDoctor,
+} = require("../../controllers/doctor/patientsOfDoctorController");
+const {
+  validategetAllPatientsOfDoctor,
+  validateSpecificPatientOfDoctor,
+  validateDeletePatientOfDoctor,
+  validateupdatePatientOfDoctor,
+  validatecreatePatientOfDoctor,
+} = require("../../utils/validators/patientsOfDoctorValidator");
+const router = express.Router({ mergeParams: true });
 
-const router=express.Router({mergeParams: true});
 
 
-router.route('/:doctorId/PatientOfDoctor')
-.get(getAllPatientsOfDoctor)
-.post(createPatientOfDoctor )
+router
+  .route("/")
+  .get(validategetAllPatientsOfDoctor, getAllPatientsOfDoctor)
+  .post(validatecreatePatientOfDoctor, createPatientOfDoctor);
 
-router.route('/:doctorId/:PatientOfDoctorId')
-.get(getPatientOfDoctor)   
-.put(updatePatientOfDoctor)
-.delete(deletePatientOfDoctor)
+router
+  .route("/:PatientOfDoctorId")
+  .get(validateSpecificPatientOfDoctor, getPatientOfDoctor)
+  .put(validateupdatePatientOfDoctor, updatePatientOfDoctor)
+  .delete(validateDeletePatientOfDoctor, deletePatientOfDoctor);
 
-
-
-module.exports=router;
+module.exports = router;

@@ -30,11 +30,9 @@ const patientSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: Date,
-      required: [true, "Date of birth is required."],
     },
     age: {
       type: Number,
-      required: [true, "Age is required."],
       min: [0, "Age cannot be negative."],
     },
     gender: {

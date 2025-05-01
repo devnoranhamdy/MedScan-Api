@@ -12,6 +12,11 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const path = require("path");
 const doctor_recomm_router = require("./routes/patient/doctorRecommRoute");
 const dataBaseConnection = require('./config/dbConfig')
+const ApiError = require('./utils/ApiError')
+
+
+
+
 dataBaseConnection()
 
 // Import routes
@@ -30,11 +35,8 @@ app.use(
     credentials: true,
   })
 );
-
 app.use(cookieParser());
 app.use(bodyParser.json());
-
-// Cookie session configuration
 app.use(
   cookieSession({
     name: "session",
@@ -42,12 +44,10 @@ app.use(
     maxAge: 7 * 24 * 60 * 60 * 1000,
   })
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 
-// Routes
 app.use("/api/users", userRouter);
 app.use("/api/medscanChatbot", chatbotRoute);
 app.use("/api", doctor_recomm_router);
@@ -56,22 +56,17 @@ app.use("/api/patients", patientRoutes);
 
 
 app.all("*", (req, res, next) => {
-  res.status(404).json({
-    status: httpStatusText.ERROR,
-    message: "This Page Not Found!",
-  });
+  return next ( new ApiError ("This Page Not Found!", 404))  
 });
 
-// Error handling middleware (you might want to add this)
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    status: httpStatusText.ERROR,
-    message: err.message || "Internal Server Error",
-  });
+app.use((error, req, res, next) => {
+  res.status(error.statusCode || 500 ).json({ status : error.status ,  message : error.message || "Internal Server Error" , stack : error.stack})
 });
 
-// Start server
+process.on('unhandledRejection' , (error)=>{
+  console.log(`unhandledRejection : ${error.message} & ${error.name}`)
+});
+
 app.listen(port, () => {
   console.log(`Application running successfully`);
 });

@@ -18,7 +18,7 @@ exports.specificDoctorProfile = asyncHandler(async (req,res)=>{
     
     const { doctorId } = req.params;
     const Doctor = await Doctor.findById(doctorId);
-    res.status(200).json({ status : httpStatusText.SUCCESS , message:"Doctor updated successfully", data : Doctor});
+    res.status(200).json({ status : httpStatusText.SUCCESS , data : Doctor});
 
 });
 exports.updateDoctorInfo = asyncHandler( async (req,res)=>

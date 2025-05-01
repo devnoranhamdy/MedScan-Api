@@ -7,21 +7,26 @@ const {
   createDoctorProfile,
 } = require("../../controllers/doctor/doctorProfileController");
 
+const {
+  validateDeleteDoctorProfile,
+  validateSpecificDoctorProfile,
+  validateUpdateDoctorInfo,
+  validatecreateDoctorProfile,
+} = require("../../utils/validators/doctorProfileValidator");
 const router = express.Router();
 
 router
   .route("/DoctorProfile")
   .get(getAllDoctorProfiles)
-  .post(createDoctorProfile);
+  .post(validatecreateDoctorProfile, createDoctorProfile);
 
 router
   .route("/DoctorProfile/:DoctorId")
-  .get(specificDoctorProfile)
-  .put(updateDoctorInfo)
-  .delete(deleteDoctorProfile);
+  .get(validateSpecificDoctorProfile, specificDoctorProfile)
+  .put(validateUpdateDoctorInfo, updateDoctorInfo)
+  .delete(validateDeleteDoctorProfile, deleteDoctorProfile);
 
 const PatientOfDoctorRoute = require("./patientOfDoctorRoutes");
 router.use("/:doctorId/PatientOfDoctor", PatientOfDoctorRoute);
-router.use("/:doctorId/:PatientOfDoctorId", PatientOfDoctorRoute);
 
 module.exports = router;

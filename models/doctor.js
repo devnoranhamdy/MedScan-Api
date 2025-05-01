@@ -19,7 +19,6 @@ const doctorSchema = new mongoose.Schema(
         message:
           "Marital status must be one of: single or married",
       },
-      required: [true, "Marital status is required."],
     },
     city: {
       type: String,
