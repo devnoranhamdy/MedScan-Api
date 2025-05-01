@@ -1,18 +1,14 @@
-const verifyToken = require ('./verifyToken')
+const ApiError = require("../utils/ApiError");
 
-const verifyRole = (requiredRole) => {
-    return (req, res, next) => {
+const verifyRole = (requiredRole) =>  (req, res, next) =>
+       {
       const userRole = req.decodedToken.role; 
       
       if (userRole !== requiredRole) {
-        return res.status(403).json({
-          status: httpStatusText.ERROR,
-          data: 'Access denied. You do not have the required role.'
-        });
+        return next (new ApiError ('Access denied. You do not have the required role.' ,403))
       }
-  
       next(); 
     };
-  };
+ 
   
   module.exports = verifyRole
