@@ -48,11 +48,11 @@ const patientOfDoctorSchema = new mongoose.Schema(
     ],
 
     doctor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctor",
+      type: mongoose.Schema.ObjectId,
+      ref: "Doctor_Profile",
       required: [true, "Doctor reference is required."],
     },
   },{ timestamps: true }
 );
 
-module.exports = mongoose.model("PatientOfDoctor", patientOfDoctorSchema);
+module.exports = mongoose.model("Patient_Of_Doctor", patientOfDoctorSchema);

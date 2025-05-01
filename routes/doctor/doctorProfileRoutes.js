@@ -16,12 +16,12 @@ const {
 const router = express.Router();
 
 router
-  .route("/DoctorProfile")
+  .route("/")
   .get(getAllDoctorProfiles)
-  .post(validatecreateDoctorProfile, createDoctorProfile);
+  .post( validatecreateDoctorProfile, createDoctorProfile);
 
 router
-  .route("/DoctorProfile/:DoctorId")
+  .route("/:doctorId")
   .get(validateSpecificDoctorProfile, specificDoctorProfile)
   .put(validateUpdateDoctorInfo, updateDoctorInfo)
   .delete(validateDeleteDoctorProfile, deleteDoctorProfile);

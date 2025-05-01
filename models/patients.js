@@ -6,6 +6,7 @@ const patientSchema = new mongoose.Schema(
     patientId: {
       type: Number,
       unique: true,
+      default: () => Math.floor(Math.random() * 1000000000),
     },
 
     firstName: {

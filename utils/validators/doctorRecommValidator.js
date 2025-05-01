@@ -1,21 +1,44 @@
 const { check } = require("express-validator");
 const validationMiddleWare = require("../../middelware/validationError");
-const Patient = require("../../models/doctorRecomm");
+const Doctor = require("../../models/doctorRecomm");
 
 
-const checkPatientId = () => {
-  return check("PatientId")
+const checkDoctorId = () => {
+  return check("doctorId")
     .isMongoId()
     .withMessage("invalid id format")
-    .custom(async (PatientId) => {
-      const findPatient = await Patient.findById(PatientId);
-      if (!findPatient) {
-        return Promise.reject(new Error("Patient not exist!"));
+    .custom(async (doctorId) => {
+      const findDoctor = await Doctor.findById(doctorId);
+      if (!findDoctor) {
+        return Promise.reject(new Error("Doctor not exist!"));
       }
       return true;
     });
 };
-exports.validatespecificDoctorById = [checkPatientId(), validationMiddleWare];
+
+const findDoctorByspecialization = () => {
+  return check("specialization").custom(async (specialization) => {
+    const findDoctor = await Doctor.findOne({ specialization });
+    if (!findDoctor) {
+      return Promise.reject(new Error('there is no doctors available'));
+    }
+    return true;
+  });
+};
+
+const findDoctorByCity= () => {
+  return check("clinic_location").custom(async (clinic_location) => {
+    const findDoctor = await Doctor.findOne({ clinic_location });
+    if (!findDoctor) {
+      return Promise.reject(new Error('there is no doctors available'));
+    }
+    return true;
+  });
+};
+
+exports.validateSpecificDoctorById = [checkDoctorId(), validationMiddleWare];
+exports.validateShowDoctorsBySpecialty= [findDoctorByspecialization(), validationMiddleWare];
+exports.validateShowDoctorsBycity= [findDoctorByCity(), validationMiddleWare];
 
 /*exports.doctorRecommendationValidator = [
   check("name")

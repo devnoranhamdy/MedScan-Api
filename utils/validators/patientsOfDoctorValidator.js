@@ -1,14 +1,14 @@
 const { check } = require("express-validator");
 const validationMiddleWare = require("../../middelware/validationError");
 const Patient = require("../../models/patientOfDoctor");
-const Doctor = require("../../models/doctor");
+const Doctor_Profile = require("../../models/doctor");
 
 const checkDoctorId = () => {
-  return check("DoctorId")
+  return check("doctorId")
     .isMongoId()
     .withMessage("invalid id format")
-    .custom(async (DoctorId) => {
-      const findDoctor = await Doctor.findById(DoctorId);
+    .custom(async (doctorId) => {
+      const findDoctor = await Doctor_Profile.findById(doctorId);
       if (!findDoctor) {
         return Promise.reject(new Error("doctor not exist!"));
       }
@@ -46,7 +46,7 @@ exports.validateDeletePatientOfDoctor = [
 ];
 
 exports.validateupdatePatientOfDoctor = [
-  check("patientName")
+  check("patientName").optional()
     .isLength({ min: 2 })
     .withMessage("Patient name must be at least 2 characters."),
 

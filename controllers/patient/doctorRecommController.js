@@ -11,35 +11,21 @@ const showAllDoctors = asyncHandler( async (req,res)=>{
           const page = query.page|| 1 ;
           const skip = (page-1)*limit ; 
           const doctors = await Doctor.find().limit(limit).skip(skip)
-          if (!doctors || doctors.length === 0)
-          {
-            return res.status(400).json({ status : httpStatusText.FAIL , data : null , message : 'there is no doctors available'  })
-
-          }
-           return res.status(200).json({ status : httpStatusText.SUCCESS , data : doctors  })
+          return res.status(200).json({ status : httpStatusText.SUCCESS ,  length :doctors.length , data : doctors  })
    
 });
+
 const showDoctorsBySpecialty =  asyncHandler(async (req,res)=>{
-    
           const query = req.query;
           const limit = query.limit ||20 ;
           const page = query.page|| 1 ;
           const skip = (page-1)*limit ;
           const  specialization =  query.specialization ;
-
-          console.log('Specialization received:', specialization);
-
           const doctors = await  Doctor.find({ specialization : { $regex: specialization, $options: 'i' } }).limit(limit).skip(skip)
-           if (!doctors || doctors.length === 0)
-            {
-              return res.status(400).json({ status : httpStatusText.FAIL , data : null , message : 'there is no doctors available'  })
-  
-            }
             return res.status(200).json({ status : httpStatusText.SUCCESS , data : doctors  })
 
-
-    
 });
+
 const showDoctorsByCity = asyncHandler (async (req,res)=>{
     
           const query = req.query;
@@ -48,14 +34,10 @@ const showDoctorsByCity = asyncHandler (async (req,res)=>{
           const skip = (page-1)*limit ;
           const  clinic_location =  query.clinic_location ;
           const doctors = await  Doctor.find({ clinic_location : { $regex: clinic_location, $options: 'i' } }).limit(limit).skip(skip)
-           if (!doctors || doctors.length === 0)
-            {
-              return res.status(400).json({ status : httpStatusText.FAIL , data : null , message : 'there is no doctors available'  })
-  
-            }
-            return res.status(200).json({ status : httpStatusText.SUCCESS , data : doctors  })
+          return res.status(200).json({ status : httpStatusText.SUCCESS , data : doctors  })
     
 });
+
 const showDoctorsByCityAndSpecialty = asyncHandler (async (req,res)=>{
     
             const { specialization, clinic_location ,Limit = 20, Page = 1  } = req.query;
@@ -84,6 +66,7 @@ const showDoctorsByCityAndSpecialty = asyncHandler (async (req,res)=>{
 
     
 });
+
 const specificDoctorById = asyncHandler(async (req,res)=>{
     
   const { doctorId } = req.params;

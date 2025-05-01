@@ -10,16 +10,18 @@ exports.getAllPatientProfiles = asyncHandler (async (req,res)=>{
     const pageNum = page * 1 || 1
     const skip = (pageNum - 1) * limitNum;
     const patients = await Patient.find({},{"__v": 0}).skip(skip).limit(limitNum);
-    res.status(200).json({ status : httpStatusText.SUCCESS , message:"patient updated successfully", data : patients});
+    res.status(200).json({ status : httpStatusText.SUCCESS ,length :patients.length  , data : patients});
 
 });
+
 exports.specificPatientProfile = asyncHandler(async (req,res)=>{
     
     const { patientId } = req.params;
     const patient = await Patient.findById(patientId);
-    res.status(200).json({ status : httpStatusText.SUCCESS , message:"patient updated successfully", data : patient});
+    res.status(200).json({ status : httpStatusText.SUCCESS , data : patient});
 
 });
+
 exports.updatePatientInfo = asyncHandler( async (req,res)=>
     {
       
@@ -28,7 +30,8 @@ exports.updatePatientInfo = asyncHandler( async (req,res)=>
         res.status(200).json({ status : httpStatusText.SUCCESS , message:"patient updated successfully", data : updatedPatient});
             
         
-    });
+});
+
 exports.deletePatientProfile = asyncHandler(async(req,res)=>
     {
        
@@ -36,7 +39,8 @@ exports.deletePatientProfile = asyncHandler(async(req,res)=>
             await Patient.findByIdAndDelete(patientId);
             res.status(200).json({ status : httpStatusText.SUCCESS , message:"patient deleted successfully"});
        
-   });
+});
+
 exports.createPatientProfile = asyncHandler(async(req,res)=>{
         
     const newPatient = new Patient(req.body)

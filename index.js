@@ -1,27 +1,24 @@
 const express = require("express");
-const morgan = require ('morgan')
+const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
-const bodyParser = require("body-parser");
-const doctorRecommendationRouter = require("./routes/patient/doctorRecommRoute");
-const dataBaseConnection = require('./config/dbConfig')
-const ApiError = require('./utils/ApiError')
+const dataBaseConnection = require("./config/dbConfig");
+const ApiError = require("./utils/ApiError");
 //const { GoogleGenerativeAI } = require("@google/generative-ai");
 //const path = require("path");
 //const passportSetup = require("./config/passportConfig");
 //const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
+dataBaseConnection();
 
-
-dataBaseConnection()
-
-const userRouter = require("./routes/auth/userRoute");
+const authRouter = require("./routes/auth/authRoute");
 const chatbotRoute = require("./routes/chatbot/chatbotRoute");
-const doctorRoutes = require("./routes/doctor/doctorProfileRoutes");
-const patientRoutes = require("./routes/patient/patientProfileRoutes");
+const doctorProfileRoute = require("./routes/doctor/doctorProfileRoutes");
+const patientProfileRoute = require("./routes/patient/patientProfileRoutes");
+const doctorRecommendationRouter = require("./routes/patient/doctorRecommRoute");
 
 const app = express();
 const port = process.env.PORT;
@@ -34,7 +31,6 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(bodyParser.json());
 app.use(
   cookieSession({
     name: "session",
@@ -49,22 +45,29 @@ if (process.env.NODE_ENV === "development") {
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/users", userRouter);
-app.use("/api/medscanChatbot", chatbotRoute);
-app.use("/api", doctorRecommendationRouter);
-app.use("/api/doctors", doctorRoutes);
-app.use("/api/patients", patientRoutes);
+app.use("/api/auth", authRouter);
+app.use("/api/Chatbot", chatbotRoute);
+app.use("/api/doctorRecommendation", doctorRecommendationRouter);
+app.use("/api/doctor", doctorProfileRoute);
+app.use("/api/patient", patientProfileRoute);
 
 
-app.all("*", (req, res, next) => next(new ApiError("This Page Not Found!", 404)));
-
+app.all("*", (req, res, next) =>
+  next(new ApiError("This Page Not Found!", 404))
+);
 
 app.use((error, req, res, next) => {
-  res.status(error.statusCode || 500 ).json({ status : error.status ,  message : error.message || "Internal Server Error" , stack : error.stack})
+  const status = error.status || "error";
+  res.status(error.statusCode || 500)
+    .json({
+      status: error.status,
+      message: error.message || "Internal Server Error",
+      stack: error.stack,
+    });
 });
 
-process.on('unhandledRejection' , (error)=>{
-  console.log(`unhandledRejection : ${error.message} & ${error.name}`)
+process.on("unhandledRejection", (error) => {
+  console.log(`unhandledRejection : ${error.message} & ${error.name}`);
 });
 
 app.listen(port, () => {

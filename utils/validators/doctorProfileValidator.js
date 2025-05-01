@@ -1,27 +1,44 @@
 const { check } = require("express-validator");
 const validationMiddleWare = require("../../middelware/validationError");
-const Doctor = require("../../models/doctor");
+const Doctor_Profile = require("../../models/doctor");
 
 const checkDoctorId = () => {
-  return check("DoctorId")
+  return check("doctorId")
     .isMongoId()
     .withMessage("invalid id format")
-    .custom(async (DoctorId) => {
-      const findDoctor = await Doctor.findById(DoctorId);
+    .custom(async (doctorId) => {
+      const findDoctor = await Doctor_Profile.findById(doctorId);
       if (!findDoctor) {
         return Promise.reject(new Error("doctor not exist!"));
       }
       return true;
     });
 };
+
+const findDoctor = () => {
+  return check("email").custom(async (email) => {
+    const findEmail = await Doctor_Profile.findOne({ email });
+    if (findEmail) {
+      return Promise.reject(new Error("user already exist!"));
+    }
+    return true;
+  });
+};
+
 exports.validateDeleteDoctorProfile = [checkDoctorId(), validationMiddleWare];
 
 exports.validateSpecificDoctorProfile = [checkDoctorId(), validationMiddleWare];
 
 exports.validateUpdateDoctorInfo = [
-  check("firstName").isString().withMessage("First name must be a string."),
+  check("firstName")
+    .optional()
+    .isString()
+    .withMessage("First name must be a string."),
 
-  check("lastName").isString().withMessage("Last name must be a string."),
+  check("lastName")
+    .optional()
+    .isString()
+    .withMessage("Last name must be a string."),
 
   check("Status")
     .optional()
@@ -45,7 +62,7 @@ exports.validateUpdateDoctorInfo = [
     .isMobilePhone()
     .withMessage("Phone number must be valid."),
 
-  check("email").isEmail().withMessage("Email must be valid."),
+  check("email").optional().isEmail().withMessage("Email must be valid."),
 
   check("specialty")
     .optional()
@@ -99,5 +116,6 @@ exports.validatecreateDoctorProfile = [
     .optional()
     .isString()
     .withMessage("Specialty must be a string."),
+  findDoctor(),
   validationMiddleWare,
 ];

@@ -1,24 +1,14 @@
 const express = require("express");
-const doctor_recomendation_controler = require("../../controllers/patient/doctorRecommController");
+const doctorRecomendationControler = require("../../controllers/patient/doctorRecommController");
 const router = express.Router();
 const verifyToken = require("../../middelware/verifyToken");
 const verifyRole = require("../../middelware/verifyRole");
-const{validatespecificDoctorById}= require('../../utils/validators/doctorRecommValidator')
+const{validateSpecificDoctorById , validateShowDoctorsBySpecialty ,validateShowDoctorsBycity}= require('../../utils/validators/doctorRecommValidator')
 
-router.get("/doctors", doctor_recomendation_controler.showAllDoctors);
-router.get(
-  "/doctors_by_specialty",
-  doctor_recomendation_controler.showDoctorsBySpecialty
-);
-router.get(
-  "/doctors_by_city",
-  doctor_recomendation_controler.showDoctorsByCity
-);
-router.get(
-  "/doctors_by_city_and_specialty",
-  doctor_recomendation_controler.showDoctorsByCityAndSpecialty
-);
-
-router.get('/searchDoctor/:doctorId' ,validatespecificDoctorById, doctor_recomendation_controler.specificDoctorById )
+router.get("/", doctorRecomendationControler.showAllDoctors);
+router.get("/bySpecialty",validateShowDoctorsBySpecialty,doctorRecomendationControler.showDoctorsBySpecialty);
+router.get( "/byCity",validateShowDoctorsBycity,doctorRecomendationControler.showDoctorsByCity);
+router.get("/byCityAndSpecialty",doctorRecomendationControler.showDoctorsByCityAndSpecialty);
+router.get('/:doctorId' ,validateSpecificDoctorById, doctorRecomendationControler.specificDoctorById )
 
 module.exports = router;

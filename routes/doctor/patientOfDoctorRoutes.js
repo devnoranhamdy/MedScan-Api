@@ -5,6 +5,8 @@ const {
   getPatientOfDoctor,
   updatePatientOfDoctor,
   deletePatientOfDoctor,
+  nestedRouteForAddDoctorIdToParam,
+  
 } = require("../../controllers/doctor/patientsOfDoctorController");
 const {
   validategetAllPatientsOfDoctor,
@@ -20,7 +22,7 @@ const router = express.Router({ mergeParams: true });
 router
   .route("/")
   .get(validategetAllPatientsOfDoctor, getAllPatientsOfDoctor)
-  .post(validatecreatePatientOfDoctor, createPatientOfDoctor);
+  .post( nestedRouteForAddDoctorIdToParam,validatecreatePatientOfDoctor,  createPatientOfDoctor);
 
 router
   .route("/:PatientOfDoctorId")
