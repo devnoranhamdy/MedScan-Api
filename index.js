@@ -19,6 +19,8 @@ const chatbotRoute = require("./routes/chatbot/chatbotRoute");
 const doctorProfileRoute = require("./routes/doctor/doctorProfileRoutes");
 const patientProfileRoute = require("./routes/patient/patientProfileRoutes");
 const doctorRecommendationRouter = require("./routes/patient/doctorRecommRoute");
+const userRouter = require("./routes/admin/userRoute");
+const doctorMangmentRouter = require("./routes/admin/doctorMangmentRoute");
 
 const app = express();
 const port = process.env.PORT;
@@ -50,6 +52,8 @@ app.use("/api/Chatbot", chatbotRoute);
 app.use("/api/doctorRecommendation", doctorRecommendationRouter);
 app.use("/api/doctor", doctorProfileRoute);
 app.use("/api/patient", patientProfileRoute);
+app.use("/api/user",userRouter );
+app.use("/api/doctorMangment", doctorMangmentRouter);
 
 
 app.all("*", (req, res, next) =>

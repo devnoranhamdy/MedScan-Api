@@ -2,6 +2,7 @@ const { check } = require("express-validator");
 const validationMiddleWare = require("../../middelware/validationError");
 const Patient = require("../../models/patientOfDoctor");
 const Doctor_Profile = require("../../models/doctor");
+const ApiError = require ('../ApiError.js')
 
 const checkDoctorId = () => {
   return check("doctorId")
@@ -10,7 +11,7 @@ const checkDoctorId = () => {
     .custom(async (doctorId) => {
       const findDoctor = await Doctor_Profile.findById(doctorId);
       if (!findDoctor) {
-        return Promise.reject(new Error("doctor not exist!"));
+        return Promise.reject(new ApiError("doctor not exist!" , 400));
       }
       return true;
     });
