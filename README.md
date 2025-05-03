@@ -97,6 +97,7 @@ MedScan allows users to interact with a system based on AI to analyze medical im
 - **File Upload:** Multer
 - **Email Service:** Mailtrap
 - **Validation:** Express-validator, Validator
+- **Logging:** Morgan (for logging HTTP requests)
 
 ---
 
@@ -105,7 +106,7 @@ MedScan allows users to interact with a system based on AI to analyze medical im
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/advanced-auth-system.git
+   git clone https://github.com/devnoranhamdy/MedScan-Api.git
    ```
 
 2. Install dependencies:
@@ -115,16 +116,7 @@ MedScan allows users to interact with a system based on AI to analyze medical im
 
 3. Create a .env file and configure the following variables:
    ```
-   PORT=port
-   MONGO_URI=your_mongo_connection_string
-   JWT_SECRET=your_jwt_secret
-   JWT_REFRESH_SECRET=your_jwt_refresh_secret
-   GOOGLE_CLIENT_ID=your_google_client_id
-   GOOGLE_CLIENT_SECRET=your_google_client_secret
-   FACEBOOK_APP_ID=your_facebook_app_id
-   FACEBOOK_APP_SECRET=your_facebook_app_secret
-   MAILTRAP_USER=your_mailtrap_username
-   MAILTRAP_PASS=your_mailtrap_password
+ 
    ```
   4. Start the server:
      ```
