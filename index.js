@@ -61,15 +61,12 @@ app.all("*", (req, res, next) =>
 );
 
 app.use((error, req, res, next) => {
-  const status = error.status || "error";
-  res.status(error.statusCode || 500)
-    .json({
-      status: error.status,
-      message: error.message || "Internal Server Error",
-      stack: error.stack,
-    });
+  res.status(error.statusCode || 500).json({
+    status: error.status || "error",
+    message: error.message || "Internal Server Error",
+    stack: error.stack,
+  });
 });
-
 process.on("unhandledRejection", (error) => {
   console.log(`unhandledRejection : ${error.message} & ${error.name}`);
 });
