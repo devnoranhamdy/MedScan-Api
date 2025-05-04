@@ -9,6 +9,8 @@ const run = express.Router();
 const router = express.Router();
 
 router.post("/upload", upload.single("scan"), chatbotController.uploadScans);
-router.post("/MedScan", verifyToken, run);
+
+
+
 
 module.exports = router;

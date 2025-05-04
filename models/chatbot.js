@@ -9,7 +9,6 @@ const adviceSchema = new mongoose.Schema({
 
 const chatBotSchema = new mongoose.Schema ({
     user_id : { type : String  },
-    chat_id :{ type : String  },
     messages : { type : String  },
     scan : { type : String } ,
     advices : [adviceSchema],
