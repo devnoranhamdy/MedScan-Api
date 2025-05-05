@@ -7,7 +7,6 @@ const passport = require("passport");
 const cookieSession = require("cookie-session");
 const dataBaseConnection = require("./config/dbConfig");
 const ApiError = require("./utils/ApiError");
-//const { GoogleGenerativeAI } = require("@google/generative-ai");
 //const path = require("path");
 //const passportSetup = require("./config/passportConfig");
 //const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -21,7 +20,7 @@ const patientProfileRoute = require("./routes/patient/patientProfileRoutes");
 const doctorRecommendationRouter = require("./routes/patient/doctorRecommRoute");
 const userRouter = require("./routes/admin/userRoute");
 const doctorMangmentRouter = require("./routes/admin/doctorMangmentRoute");
-const chatbotRoutes = require('./routes/chatbot/sendScanToModelRoute');
+const chatbotSendRoutes = require('./routes/chatbot/sendScanToModelRoute');
 
 const app = express();
 const port = process.env.PORT;
@@ -55,7 +54,7 @@ app.use("/api/doctor", doctorProfileRoute);
 app.use("/api/patient", patientProfileRoute);
 app.use("/api/user",userRouter );
 app.use("/api/doctorMangment", doctorMangmentRouter);
-app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/chatbotSend', chatbotSendRoutes);
 
 app.all("*", (req, res, next) =>
   next(new ApiError("This Page Not Found!", 404))

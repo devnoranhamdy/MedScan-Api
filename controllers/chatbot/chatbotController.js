@@ -3,17 +3,159 @@ const httpStatusText = require("../../utils/httpStatusText.js");
 const cloudinary = require("../../config/cloudinaryConfig.js");
 const multer = require("multer");
 const upload = require("../../middelware/multer.js");
-const chatbot = require("../../models/chatbot.js");
+const ChatBot = require("../../models/chatbot.js");
 const asyncHandler = require('express-async-handler')
+const {GoogleGenerativeAI} = require("@google/generative-ai");
+const { generationConfig, promptText } = require("../../config/geminiConfig.js");
+const mongoose = require('mongoose');
 
-const uploadScans = asyncHandler(async (req, res) => {
-  
-    const result = await cloudinary.uploader.upload(req.file.path);
-    const newScan = new chatbot({ scan: result.secure_url });
-    newScan.save();
-    res.status(200).json({ status: httpStatusText.SUCCESS,  message: "Uploaded!", data: result,});
+const chatSessions = {};
+
+exports.uploadScan = asyncHandler(async (req, res) => {
+  const userId = req.params.user_id;
+
+  if (!userId) {
+    return res.status(401).json({ status: httpStatusText.FAIL, message: "Unauthorized" });
+  }
+
+  // التأكد من وجود ملف مرفوع
+  if (!req.file) {
+    return res.status(400).json({ status: httpStatusText.FAIL, message: "No file uploaded" });
+  }
+
+  // رفع الصورة على Cloudinary
+  const result = await cloudinary.uploader.upload(req.file.path);
+
+
+  if (result && result.secure_url) {
+    // تحديث الـ ChatBot وحفظ رابط الصورة في حقل scan_url
+    const updatedDoc = await ChatBot.findOneAndUpdate(
+      { user_id: userId },
+      { 
+        $push: { 
+          scans: { 
+            scan_url: result.secure_url,  // استخدام scan_url بدلاً من secure_url
+            uploadedAt: new Date()        // تاريخ الرفع
+          }
+        }
+      },
+      { upsert: true, new: true }
+    );
+
+
+    // الرد بالمعلومات مع رابط الصورة
+    res.status(200).json({
+      status: httpStatusText.SUCCESS,
+      message: "Scan uploaded successfully!",
+      data: updatedDoc,
+    });
+  } else {
+    throw new Error('No scan_url returned from Cloudinary');
+  }
 });
 
-module.exports = {
-  uploadScans,
-};
+exports.chatWithBot = asyncHandler(async (req, res) => {
+  const apiKey = process.env.GEMINI_API_KEY;
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const userMessage = req.body.message;
+  const firstName = req.decodedToken?.firstName || "User";
+  const user_id = req.params.user_id || req.decodedToken?.id;
+
+  if (!user_id) {
+    return res.status(400).json({ status: "error", message: "user_id is required" });
+  }
+
+  let chat = chatSessions[user_id];
+
+  if (!chat) {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+    const prompt = promptText(firstName);
+
+    chat = model.startChat({
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [{ text: prompt }],
+        },
+        {
+          role: "model",
+          parts: [{ text: "شكرًا، سألتزم بالتعليمات. يمكنك بدء المحادثة الآن 🩺" }],
+        },
+      ],
+    });
+
+    chatSessions[user_id] = chat;
+  }
+
+  const result = await chat.sendMessage(userMessage);
+  const response = await result.response;
+  const text = await response.text();
+
+  const adviceMatch = text.match(/📝\s*(?:Medical Advice|نصيحة طبية):\s*(?:\n{0,2})?([\s\S]*?)(?:\n{2,}|$)/i);
+  const adviceContent = adviceMatch?.[1]?.trim();
+
+  const newMessage = {
+    role: 'user',
+    content: userMessage,
+    timestamp: new Date(),
+  };
+
+  const botReplyMessage = {
+    role: 'bot',
+    content: text,
+    timestamp: new Date(),
+  };
+
+  let chatDoc = await ChatBot.findOne({ user_id });
+
+  if (!chatDoc) {
+    chatDoc = await ChatBot.create({ user_id, messages: [], scans: [], advices: [] });
+  }
+
+  chatDoc.messages.push(newMessage, botReplyMessage);
+
+  if (adviceContent) {
+    chatDoc.advices.push({
+      title: "Medical Advice",
+      content: adviceContent,
+      dateGiven: new Date(),
+    });
+  }
+
+  await chatDoc.save();
+
+  res.status(200).json({ status: "success", reply: text });
+});
+
+exports.getChatHistory = asyncHandler(async (req, res) => {
+  
+  const userId = req.params.user_id; // req.decodedToken?.id;
+
+  const chatHistory = await ChatBot.findOne({ user_id: userId });
+
+  if (!chatHistory) {
+    return res.status(404).json({status: httpStatusText.FAIL,message: "No chat history found for this user.",});
+  }
+
+  res.status(200).json({ status: httpStatusText.SUCCESS , data: chatHistory, });
+});
+
+exports.clearChatHistory = asyncHandler(async (req, res) => {
+  const userId = req.params.user_id; // req.decodedToken?.id;
+  const updatedChatHistory = await ChatBot.findOneAndUpdate(
+    { user_id: userId },
+    { $set: { messages: [], scans: [], advices: [] } }, 
+    { new: true } 
+  );
+
+  if (!updatedChatHistory) {
+    return res.status(404).json({ status: httpStatusText.FAIL,  message: "No chat history found to clear for this user.",});
+  }
+  res.status(200).json({ status: httpStatusText.SUCCESS, message: "Chat history cleared successfully.",});
+ 
+});
+
+
+
+
