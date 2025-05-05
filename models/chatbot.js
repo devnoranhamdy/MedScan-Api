@@ -5,7 +5,7 @@ const adviceSchema = new Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
   dateGiven: { type: Date, default: Date.now },
-}, { _id: false });
+}, { _id: true });
 
 const messageSchema = new Schema({
   role: { type: String, enum: ['user', 'bot'], required: true }, // مين اللي بعت الرسالة

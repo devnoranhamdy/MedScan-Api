@@ -88,9 +88,25 @@ exports.chatWithBot = asyncHandler(async (req, res) => {
     chatSessions[user_id] = chat;
   }
 
-  const result = await chat.sendMessage(userMessage);
-  const response = await result.response;
-  const text = await response.text();
+  let result, response, text;
+  try {
+    result = await chat.sendMessage(userMessage);
+    response = await result.response;
+    text = await response.text();
+  } catch (error) {
+    if (error.message.includes("429")) {
+      return res.status(429).json({
+        status: "error",
+        message: "لقد تجاوزت الحد اليومي للطلبات المجانية. يُرجى المحاولة لاحقًا أو التحقق من خطة الاستخدام الخاصة بك.",
+      });
+    }
+    // غير كده اعتبره خطأ عام
+    return res.status(500).json({
+      status: "error",
+      message: "حدث خطأ أثناء محاولة التواصل مع الروبوت الطبي.",
+      error: error.message,
+    });
+  }
 
   const adviceMatch = text.match(/📝\s*(?:Medical Advice|نصيحة طبية):\s*(?:\n{0,2})?([\s\S]*?)(?:\n{2,}|$)/i);
   const adviceContent = adviceMatch?.[1]?.trim();

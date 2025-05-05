@@ -21,6 +21,7 @@ const doctorRecommendationRouter = require("./routes/patient/doctorRecommRoute")
 const userRouter = require("./routes/admin/userRoute");
 const doctorMangmentRouter = require("./routes/admin/doctorMangmentRoute");
 const chatbotSendRoutes = require('./routes/chatbot/sendScanToModelRoute');
+const MedicalAdvicesRoute = require('./routes/patient/MedicalAdvicesRoute')
 
 const app = express();
 const port = process.env.PORT;
@@ -55,6 +56,8 @@ app.use("/api/patient", patientProfileRoute);
 app.use("/api/user",userRouter );
 app.use("/api/doctorMangment", doctorMangmentRouter);
 app.use('/api/chatbotSend', chatbotSendRoutes);
+app.use('/api/MedicalAdvice', MedicalAdvicesRoute);
+
 
 app.all("*", (req, res, next) =>
   next(new ApiError("This Page Not Found!", 404))
