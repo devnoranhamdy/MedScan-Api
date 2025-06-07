@@ -22,7 +22,7 @@ const userRouter = require("./routes/admin/userRoute");
 const doctorMangmentRouter = require("./routes/admin/doctorMangmentRoute");
 const chatbotSendRoutes = require('./routes/chatbot/sendScanToModelRoute');
 const MedicalAdvicesRoute = require('./routes/patient/MedicalAdvicesRoute')
-
+const oauthRoute = require ('./routes/auth/oauthRoute')
 const app = express();
 const port = process.env.PORT;
 
@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/auth", authRouter);
+
 app.use("/api/Chatbot", chatbotRoute);
 app.use("/api/doctorRecommendation", doctorRecommendationRouter);
 app.use("/api/doctor", doctorProfileRoute);
@@ -57,7 +57,8 @@ app.use("/api/user",userRouter );
 app.use("/api/doctorMangment", doctorMangmentRouter);
 app.use('/api/chatbotSend', chatbotSendRoutes);
 app.use('/api/MedicalAdvice', MedicalAdvicesRoute);
-
+app.use("/api/auth", authRouter)
+app.use("/api/oauth", oauthRoute)
 
 app.all("*", (req, res, next) =>
   next(new ApiError("This Page Not Found!", 404))
