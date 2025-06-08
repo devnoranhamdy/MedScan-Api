@@ -8,6 +8,8 @@ const asyncHandler = require('express-async-handler')
 const {GoogleGenerativeAI} = require("@google/generative-ai");
 const { generationConfig, promptText } = require("../../config/geminiConfig.js");
 const mongoose = require('mongoose');
+require("dotenv").config();
+
 
 const chatSessions = {};
 
@@ -65,10 +67,12 @@ exports.chatWithBot = asyncHandler(async (req, res) => {
     return res.status(400).json({ status: "error", message: "user_id is required" });
   }
 
+
+  delete chatSessions[user_id];
   let chat = chatSessions[user_id];
 
   if (!chat) {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+    const model = genAI.getGenerativeModel({ model: 'models/gemini-2.0-flash-001' });
     const prompt = promptText(firstName);
 
     chat = model.startChat({
@@ -171,6 +175,7 @@ exports.clearChatHistory = asyncHandler(async (req, res) => {
   res.status(200).json({ status: httpStatusText.SUCCESS, message: "Chat history cleared successfully.",});
  
 });
+
 
 
 

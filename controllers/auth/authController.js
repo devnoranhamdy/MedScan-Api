@@ -17,7 +17,7 @@ exports.signup = asyncHandellar(async (req, res) => {
   const OTP_code = genrate_OTP();
 
   const newUser = new User({ name , password: hashedPassword , email , role , OTP: OTP_code, OTP_ExpiresAt: Date.now() + 5 * 60 * 1000,});
-  const token = generateJwtandCookies.genrateJWT({ email: newUser.email,role: newUser.role,id: newUser._id,});
+  const token = generateJwtandCookies.genrateJWT({ email: newUser.email,role: newUser.role,id: newUser._id, name : newUser.name });
   newUser.token = token;
 
   await newUser.save();
@@ -116,3 +116,7 @@ exports.resetPassword = asyncHandellar(async (req, res) => {
   await findUser.save();
   return res.status(200).json({ status: "success", message: "Password updated successfully" });
 });
+
+
+
+
