@@ -68,7 +68,6 @@ exports.chatWithBot = asyncHandler(async (req, res) => {
   }
 
 
-  delete chatSessions[user_id];
   let chat = chatSessions[user_id];
 
   if (!chat) {
@@ -147,6 +146,11 @@ exports.chatWithBot = asyncHandler(async (req, res) => {
 
   res.status(200).json({ status: "success", reply: text });
 });
+
+
+
+
+
 
 exports.getChatHistory = asyncHandler(async (req, res) => {
   
