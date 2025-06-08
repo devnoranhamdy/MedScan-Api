@@ -27,12 +27,24 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.PRODACTION_URL
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(
   cookieSession({
