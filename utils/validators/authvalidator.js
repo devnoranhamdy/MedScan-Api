@@ -47,8 +47,8 @@ exports.validateSignup = [
   check("role")
     .notEmpty()
     .withMessage("role is required")
-    .isIn([userRole.ADMIN, userRole.User])
-    .withMessage(`Role must be either ${userRole.ADMIN} or ${userRole.User}`),
+    .isIn([userRole.ADMIN, userRole.User , userRole.DOCTOR])
+    .withMessage(`Role must be either ${userRole.ADMIN} or ${userRole.User} or ${userRole.DOCTOR}`),
   check("password").notEmpty().withMessage("role is required"),
   isStrongPassword("password"),checkUserExists(),
   validationMiddleWare,
