@@ -16,7 +16,7 @@ const checkUserExists = () => {
 };
 
 const checkUserNotExists = () => {
-  return check("email").custom(async (email) => {
+  return check("email").custom(async (email , { req }) => {
     const user = await User.findOne({ email });
     if (!user) {
       return Promise.reject(new ApiError("Wrong Email or Password", 400));

@@ -1,5 +1,5 @@
 const express = require("express");
-const {login,signup,logout,verfiyEmail, forgotPassword,forgotPassword_verifyCode,resetPassword,} = require("../../controllers/Auth/authController")
+const {login,signup,logout,verfiyEmail, forgotPassword,forgotPassword_verifyCode,resetPassword,} = require("../../controllers/auth/authController")
 const {validateSignup ,validateLogin , validateForgotPassword , validateResetPassword } = require ('../../utils/validators/authvalidator')
 const router = express.Router();
 

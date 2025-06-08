@@ -16,7 +16,12 @@ const dataBaseConnection = () =>{
     
 }
 
+
+
     
 
 
 module.exports = dataBaseConnection
+
+
+//MONGODB_URL =  mongodb://admin:admin@localhost:27017/MedScan?authSource=admin

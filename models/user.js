@@ -9,7 +9,7 @@ const userShema = new  mongoose.Schema({
     name :{ type : String , require: true},
     email :{type : String , require: true , validate : [validator.isEmail , 'Must Be Valid Email !' ] },
     password :{type : String , require: true},
-    role :{type : String , require: true ,enum : [userRole.ADMIN ,userRole.User]  , default : userRole.User},
+    role :{type : String , require: true ,enum : [userRole.ADMIN ,userRole.User , userRole.DOCTOR]  , default : userRole.User},
     token :{type : String},
     avatar :{type : String},
     isValid : { type : Boolean ,  default : false} ,
