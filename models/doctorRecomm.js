@@ -20,7 +20,8 @@ const doctorRecommendationSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (v) {
-          return /^[0-9]+(EGP|LE)?$/.test(v); 
+          return /^[0-9]+\s?(EGP|LE)?$/.test(v);
+
         },
         message: 'Fees must be a number with optional currency (e.g., 200EGP).',
       },
