@@ -9,6 +9,8 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const crypto = require("crypto");
 const asyncHandellar = require("express-async-handler");
+const Doctor_Profile = require('../../models/doctor')
+
 
 exports.signup = asyncHandellar(async (req, res) => {
   
@@ -28,16 +30,39 @@ exports.signup = asyncHandellar(async (req, res) => {
 });
 
 exports.login = asyncHandellar(async (req, res) => {
-  const { email, password , role} = req.body;
+  const { email, password, role } = req.body;
   const user = req.user;
+
   const matchedPassword = await bcrypt.compare(password, user.password);
-  if ( matchedPassword) {
-    const token = generateJwtandCookies.genrateJWT({ email: user.email,role: user.role,id: user._id,});
-    generateJwtandCookies.setTokenInCookie(res, token);
-    return res.status(200) .json({ status: httpStatusText.SUCCESS, message: { token } });
-  } else {
-    return res.status(400).json({status: httpStatusText.FAIL,message: "Wrong Email or Password",});
+  if (!matchedPassword) {
+    return res.status(400).json({
+      status: httpStatusText.FAIL,
+      message: "Wrong Email or Password",
+    });
   }
+
+  if (user.role === 'doctor') {
+    const existingDoctor = await Doctor_Profile.findById(user._id);
+    if (!existingDoctor) {
+      await Doctor_Profile.create({
+        _id: user._id,
+        email: user.email,
+      });
+    }
+  }
+
+  const token = generateJwtandCookies.genrateJWT({
+    email: user.email,
+    role: user.role,
+    id: user._id,
+  });
+
+  generateJwtandCookies.setTokenInCookie(res, token);
+
+  return res.status(200).json({
+    status: httpStatusText.SUCCESS,
+    message: { token },
+  });
 });
 
 exports.logout = asyncHandellar(async (req, res) => {

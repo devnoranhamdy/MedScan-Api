@@ -309,8 +309,3 @@ exports.clearChatHistory = asyncHandler(async (req, res) => {
   res.status(200).json({ status: httpStatusText.SUCCESS, message: "Chat history cleared successfully.",});
  
 });
-
-
-
-
-

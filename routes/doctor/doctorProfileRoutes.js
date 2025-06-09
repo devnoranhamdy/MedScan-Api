@@ -18,7 +18,6 @@ const router = express.Router();
 router
   .route("/")
   .get(getAllDoctorProfiles)
-  .post( validatecreateDoctorProfile, createDoctorProfile);
 
 router
   .route("/:doctorId")

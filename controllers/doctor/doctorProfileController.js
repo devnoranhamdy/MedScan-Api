@@ -2,6 +2,9 @@ const express= require('express');
 const Doctor_Profile = require('../../models/doctor');
 const asyncHandler = require('express-async-handler')
 const httpStatusText = require('../../utils/httpStatusText')
+const User = require ('../../models/user')
+
+
 
 exports.getAllDoctorProfiles = asyncHandler (async (req,res)=>{
     
@@ -40,10 +43,4 @@ exports.deleteDoctorProfile = asyncHandler(async(req,res)=>
        
 });
 
-exports.createDoctorProfile = asyncHandler(async(req,res)=>{
-        
-    const newDoctor = new Doctor_Profile(req.body)
-    await newDoctor.save();
-    res.status(200).json({ status : httpStatusText.SUCCESS , message:"Doctor  added successfully" , data : newDoctor});
-   
-});
+

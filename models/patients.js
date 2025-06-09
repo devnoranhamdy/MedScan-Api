@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const patientSchema = new mongoose.Schema(
   {
-
+    
+    _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
     patientId: {
       type: Number,
       unique: true,
