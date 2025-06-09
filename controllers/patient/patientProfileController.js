@@ -41,10 +41,3 @@ exports.deletePatientProfile = asyncHandler(async(req,res)=>
        
 });
 
-exports.createPatientProfile = asyncHandler(async(req,res)=>{
-        
-    const newPatient = new Patient(req.body)
-    await newPatient.save();
-    res.status(200).json({ status : httpStatusText.SUCCESS , message:"patient deleted successfully" , data : newPatient});
-   
-});

@@ -10,7 +10,7 @@ require("dotenv").config();
 const crypto = require("crypto");
 const asyncHandellar = require("express-async-handler");
 const Doctor_Profile = require('../../models/doctor')
-
+const Patient = require('../../models/patients')
 
 exports.signup = asyncHandellar(async (req, res) => {
   
@@ -45,6 +45,16 @@ exports.login = asyncHandellar(async (req, res) => {
     const existingDoctor = await Doctor_Profile.findById(user._id);
     if (!existingDoctor) {
       await Doctor_Profile.create({
+        _id: user._id,
+        email: user.email,
+      });
+    }
+  }
+
+    if (user.role === 'patient') {
+    const existingDoctor = await Patient.findById(user._id);
+    if (!existingDoctor) {
+      await Patient.create({
         _id: user._id,
         email: user.email,
       });

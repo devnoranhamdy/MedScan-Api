@@ -15,12 +15,10 @@ const patientSchema = new mongoose.Schema(
 
     firstName: {
       type: String,
-      required: [true, "First name is required."],
       trim: true,
     },
     lastName: {
       type: String,
-      required: [true, "Last name is required."],
       trim: true,
     },
     email: {
@@ -42,7 +40,6 @@ const patientSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      required: [true, "Gender is required."],
       enum: {
         values: ["male", "female"],
         message: "Gender must be male or female.",
