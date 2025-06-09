@@ -16,6 +16,7 @@ const checkDoctorId = () => {
     });
 };
 
+/*
 const findDoctorByspecialization = () => {
   return check("specialization").custom(async (specialization) => {
     const findDoctor = await Doctor.findOne({ specialization });
@@ -36,9 +37,13 @@ const findDoctorByCity= () => {
   });
 };
 
-exports.validateSpecificDoctorById = [checkDoctorId(), validationMiddleWare];
+
+
 exports.validateShowDoctorsBySpecialty= [findDoctorByspecialization(), validationMiddleWare];
 exports.validateShowDoctorsBycity= [findDoctorByCity(), validationMiddleWare];
+*/
+
+exports.validateSpecificDoctorById = [checkDoctorId(), validationMiddleWare];
 
 /*exports.doctorRecommendationValidator = [
   check("name")

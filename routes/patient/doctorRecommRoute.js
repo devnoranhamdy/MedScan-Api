@@ -6,8 +6,8 @@ const verifyRole = require("../../middelware/verifyRole");
 const{validateSpecificDoctorById , validateShowDoctorsBySpecialty ,validateShowDoctorsBycity}= require('../../utils/validators/doctorRecommValidator')
 
 router.get("/", doctorRecomendationControler.showAllDoctors);
-router.get("/bySpecialty",validateShowDoctorsBySpecialty,doctorRecomendationControler.showDoctorsBySpecialty);
-router.get( "/byCity",validateShowDoctorsBycity,doctorRecomendationControler.showDoctorsByCity);
+router.get("/bySpecialty",doctorRecomendationControler.showDoctorsBySpecialty);
+router.get( "/byCity",doctorRecomendationControler.showDoctorsByCity);
 router.get("/byCityAndSpecialty",doctorRecomendationControler.showDoctorsByCityAndSpecialty);
 router.get('/:doctorId' ,validateSpecificDoctorById, doctorRecomendationControler.specificDoctorById )
 

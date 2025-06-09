@@ -57,10 +57,6 @@ const showDoctorsByCityAndSpecialty = asyncHandler (async (req,res)=>{
         
             const doctors = await Doctor.find(query).limit(limit).skip(skip);
         
-            if (!doctors || doctors.length === 0) {
-              return res.status(400).json({status: httpStatusText.FAIL,data: null,message: 'There are no doctors available for your filters'});
-            }
-        
             return res.status(200).json({ status: httpStatusText.SUCCESS, data: doctors});
 
 
