@@ -6,6 +6,11 @@ MedScan aims to simplify the healthcare experience for both patients and doctors
 
 ---
 
+## Project Preview
+
+![Screenshot](https://github.com/devnoranhamdy/MedScan-Api/blob/master/Screenshot%20(160).png?raw=true)
+
+
 ## **Project Idea:**
 
 MedScan is a **comprehensive healthcare application** designed to help patients analyze medical images (such as X-rays) using artificial intelligence, alongside providing **interactive medical consultations** via a **Chatbot**. The app provides an innovative solution for people who need medical advice or have health concerns but don't want to visit a doctor immediately. MedScan offers **instant healthcare solutions** using AI and the option for online consultations.
