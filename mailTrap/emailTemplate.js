@@ -29,6 +29,7 @@
 </html>
 `;
 
+
  const PASSWORD_RESET_SUCCESS_TEMPLATE = `
 <!DOCTYPE html>
 <html lang="en">
